@@ -1,10 +1,14 @@
 const jwt = require("jsonwebtoken");
 const User = require('../Models/userModel');
-const cookieParser = require("cookie-parser")
+const cookieSession=require("cookie-session");
+const cookieParser = require("cookie-parser");
 require('dotenv').config();
-
-const verifyUser = async (req, res, next) => {
+// router.use(cookieParser());
+const   verifyUser = async (req, res, next) => {
+    // console.log(req.cookies.token);
     const token = req.cookies.token;
+    // console.log(token);
+    // res.json(token);
     try {
         if (!token)
             return res.json("No Token Found");
@@ -15,6 +19,7 @@ const verifyUser = async (req, res, next) => {
                 else {
                     req.email = decoded.email;
                     req.name = decoded.name;
+                    // console.log(req.email+" "+req.name);
                     next();
                 }
             });

@@ -21,3 +21,7 @@ module.exports = function(app) {
   );
 };
 
+
+async handler : Simple middleware for handling exceptions inside of async express routes and passing them to your express error handlers.
+
+Note : In postman spaces are also considered , so be careful while writing the api's
