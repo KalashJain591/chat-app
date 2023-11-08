@@ -4,6 +4,7 @@ const colors =require('colors');
 
 require('dotenv').config();
 const mongoose = require('mongoose');
+const cors = require("cors")
 app.use(express.json()); // For JSON data
 
 const PORT = process.env.PORT||5000
@@ -11,7 +12,11 @@ const PORT = process.env.PORT||5000
 // console.log(process.env.PORT);
 
 
-
+app.use(cors({
+  origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
+  methods: ["GET", "POST", "DELETE", "PUT"],
+  credentials: true
+}))
 
 app.get('/', (req, res) => res.send('API is running'));
 

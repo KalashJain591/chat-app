@@ -1,18 +1,21 @@
 import { useState } from "react";
 import axios from 'axios';
 export default function Login() {
-    const [username, setUsername] = useState();
+    const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [pic, setPic] = useState("");
     // const { googleAuth, isAuth } = useContext(userContext);
     const [showModal, setShowModal] = useState(false);
     const [Type, setType] = useState("password");
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(!username || !email || !password){
+        if(!name || !email || !password){
         alert("Fill complete Details") 
         return;}
-        axios.post("/api/user/login",{email,password})
+        let temp=email.toUpperCase();
+        setEmail(email);
+        axios.post("/api/user/login",{email:email,password:password})
         .then(res =>{console.log(res)})
         .catch(err=>{console.log(err)})
     }
@@ -43,7 +46,7 @@ export default function Login() {
                                                 <div className="d-flex flex-row align-items-center mb-4">
                                                     <i className="fas fa-user fa-lg me-3 fa-fw"></i>
                                                     <div className="form-outline flex-fill mb-0">
-                                                        <input type="text" id="form3Example1c" className="form-control" onChange={e => setUsername(e.target.value)} />
+                                                        <input type="text" id="form3Example1c" className="form-control" onChange={e => setName(e.target.value)} />
                                                         <label className="form-label" for="form3Example1c">Your Name</label>
                                                     </div>
                                                 </div>

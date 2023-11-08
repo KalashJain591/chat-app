@@ -1,0 +1,23 @@
+https://blog.logrocket.com/why-you-should-use-proxy-server-create-react-app/#:~:text=The%20browser%20receives%20the%20request,to%20target%20a%20specific%20domain.
+
+login,register etc any API request which sends data in the backend should be used with the post functionality 
+
+res.status(400).json() , will show error in front and message would be default . Don't panic in this case as this is the behaviour of frontend , what you can do that is instead on setting the status, just used the json functionality . ie res.json({"message":"...."});
+
+
+Proxy errors : https://stackoverflow.com/questions/70374005/invalid-options-object-dev-server-has-been-initialized-using-an-options-object#:~:text=69,these%20lines%20inside%3A
+
+npm install http-proxy-middleware --save.
+
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+module.exports = function(app) {
+  app.use(
+    '/api',
+    createProxyMiddleware({
+      target: 'http://localhost:5000',
+      changeOrigin: true,
+    })
+  );
+};
+

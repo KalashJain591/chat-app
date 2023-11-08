@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import axios from 'axios';
 
 export default function Register() {
-    const [username, setUsername] = useState();
+    const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [pic, setPic] = useState("");
     const [Type, setType] = useState("password");
     const [Type1, setType1] = useState("password");
     // const { googleAuth, isAuth } = useContext(userContext);
@@ -11,6 +13,14 @@ export default function Register() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if(!name || !email || !password){
+            alert("Fill complete Details") 
+            return;}
+            let temp=email.toUpperCase();
+            setEmail(email);
+        axios.post("/api/user/register",{name,email,password,pic})
+        .then(res=>console.log(res))
+        .catch(err=>console.log(err))
     }
 
     const changeType = (e) => {
@@ -44,7 +54,7 @@ export default function Register() {
                                                 <div className="d-flex flex-row align-items-center mb-4">
                                                     <i className="fas fa-user fa-lg me-3 fa-fw"></i>
                                                     <div className="form-outline flex-fill mb-0">
-                                                        <input type="text" id="form3Example1c" className="form-control" onChange={e => setUsername(e.target.value)} />
+                                                        <input type="text" id="form3Example1c" className="form-control" onChange={e => setName(e.target.value)} />
                                                         <label className="form-label" for="form3Example1c">Your Name</label>
                                                     </div>
                                                 </div>

@@ -6,6 +6,7 @@ require('dotenv').config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const { verifyUser } = require('../Middleware/verifyUser');
 // const mailer = require('../Routes/mail');
 const app = express();
 const router = express.Router();
@@ -13,6 +14,7 @@ const router = express.Router();
 app.use(express.json());
 // app.use(cookieParser());
 // console.log(process.env.JWT_SECRET);
+
 
 router.post('/register', async (req, res) => {
     try {
@@ -22,6 +24,7 @@ router.post('/register', async (req, res) => {
         }
 
         const user = await userModel.findOne({ email: email });
+
         if (user) {
             return res.status(409).json({ message: "User already exists" });
         }
@@ -43,15 +46,20 @@ router.post('/register', async (req, res) => {
 });
 
 
-router.get('/login', async (req, res) => {
+router.post('/login' ,async (req, res) => {
     try {
+        console.log("reached zsss");
         const { email, password } = req.body;
-        const user = await userModel.findOne({email})
+        console.log(req.body);
+        // console.log(password);
+        const user = await userModel.findOne({email:email})
         if (!user) {
-            return res.status(400).json({ message: "User does not exists " });
+            console.log("reached zsss asd");
+            return res.json({ message: "User does not exists " });
         }
         const pass = await bcrypt.compare(password, user.password);
         if (pass == true) {
+            console.log("reached zsss");
             return res.status(200).json({ message: "Password  match" });
         }
         else {
@@ -59,10 +67,17 @@ router.get('/login', async (req, res) => {
         }
     }
     catch (error) {
+        console.log("reached 123 ");
+
         console.error("Error during Login:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+router.get('/logout',(req,res)=>{
+
+});
+
 
 app.use('/auth', router); // Mount the router under the '/auth' path
 
