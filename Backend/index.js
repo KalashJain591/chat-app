@@ -19,7 +19,7 @@ app.use(cookieSession({
     keys:["kalash"],
     maxAge:24*60*69*100,
   }))
-  
+
 app.use(cors({
   origin: ["http://127.0.0.1:3000", "http://localhost:3000"],
   methods: ["GET", "POST", "DELETE", "PUT"],
@@ -36,6 +36,7 @@ app.post('/', (req, res) => {
 app.use('/api/user',require('./Routes/userRoute'));
 // app.use('/api/message',require('./Routes/messageRoute'));
 
+app.use('/api/chat',require('./Routes/chatRoute'));
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{console.log('Mongodb connected'.bgBlue)})
