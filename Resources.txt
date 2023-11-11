@@ -32,3 +32,5 @@ difference bw insertMany and create function of moongoose
 1. The biggest difference is that insertMany() ends up as one atomic insertMany() command that Mongoose sends to the MongoDB server, but create() ends up as a bunch of separate insertOne() calls. 
 2. insertMany is usually faster 
 3. Another difference is that create() triggers save() middleware, because create() calls save() internally. insertMany() does not trigger save() middleware,
+
+JSON.parse() is a crucial method for converting JSON data in string form into Javascript objects. It is possible to convert simple or complex objects, but you should never convert calculations or code, like for loops.

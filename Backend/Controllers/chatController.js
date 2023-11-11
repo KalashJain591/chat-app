@@ -6,7 +6,7 @@ const Message = require('../Models/messageModel');
 
 // It is used to acess individual chats 
 const accessChats = asyncHandler(async (req, res) => {
-    const { userId } = req.body;
+    const { userId } = req.body; // This is the Id of the user with whom , signed user want to chat
     console.log(req.body);
     console.log(req.id);
     console.log(req.email);
@@ -56,7 +56,78 @@ const accessChats = asyncHandler(async (req, res) => {
 });
 
 const fetchChats = asyncHandler(async (req, res) => {
+    const userId = req.id; // This is the id of the current user .
+    console.log(userId);
+    try {
+        var allChats = await Chat.find({ users: { $elemMatch: { $eq: userId } } })
+            .populate('users', '-password')
+            .populate('latestMessage')
+            .populate('groupAdmin')
+            .sort({ updatedAt: -1 })
+        allChats = await User.populate(allChats, {
+            path: 'latestMessage.sender',
+            select: 'name pic email '
+        })
 
+        if (allChats)
+            return res.status(400).json(allChats);
+        else
+            return res.status(400).json({ message: "no Chats found" });
+    }
+    catch (err) {
+        res.status(200);
+        throw new Error(err.message);
+    }
 });
 
-module.exports = { accessChats ,fetchChats };
+const createGroupChats = asyncHandler(async (req, res) => {
+    const userId = req.id;
+    const { users, name } = req.body;
+    if (!users || !name) {
+        return res.status(400).send({ message: "Please Fill all the feilds" });
+    }
+    var members = JSON.parse(users);
+    if (members.length < 2) {
+        return res
+            .status(400)
+            .send("More than 2 users are required to form a group chat");
+    }
+    members.push(userId);
+
+    const newGroup = await Chat.create({
+        chatName: "GroupChat",
+        isGroupChat: true,
+        groupAdmin: userId,
+        users: members
+    });
+    const fullGroupChat = await Chat.findOne({ _id: newGroup._id })
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password");
+
+    res.status(200).json(fullGroupChat);
+});
+
+const renameGroup = asyncHandler(async (req, res) => {
+    const { newName, chatID } = req.body;
+    const chatElem = await Chat.findById(chatID)
+    const adminId = chatElem.groupAdmin;
+    if (!chatElem) {
+        return res.status(400).send({ message: "Chat not exists" })
+    }
+    if (adminId != req.id) {
+        return res.status(400).send({ message: "Only Admin can rename" })
+    }
+
+    const updatedChat = Chat.findByIdAndUpdate({ _id: chatID }, { chatName: newName }, { new: true })
+        .populate("users", '-password')
+        .populate('groupAdmin', '-password');
+
+    if (!updatedChat)
+        return res.status(400).send({ message: "Some error occured" })
+    else {
+        res.status(200).json(updatedChat);
+    }
+});
+
+
+module.exports = { accessChats, fetchChats, createGroupChats, renameGroup };
