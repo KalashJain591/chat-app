@@ -9,6 +9,8 @@ const   verifyUser = async (req, res, next) => {
     const token = req.cookies.token;
     // console.log(token);
     // res.json(token);
+    // console.log(process.env.JWT_SECRET);
+
     try {
         if (!token)
             return res.json("No Token Found");
@@ -17,9 +19,9 @@ const   verifyUser = async (req, res, next) => {
                 if (err)
                     return res.status(401).json({ message: "The Token is Wrong" });
                 else {
+                    req.id = decoded.id;
                     req.email = decoded.email;
-                    req.name = decoded.name;
-                    // console.log(req.email+" "+req.name);
+                    console.log(req.id+" "+req.email);
                     next();
                 }
             });

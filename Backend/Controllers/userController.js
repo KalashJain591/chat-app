@@ -9,7 +9,9 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 const getAllUser = asyncHandler(async (req, res) => {
-    const user =await userModel.findOne({email:req.email});
+    // console.log(req.id+" "+req.name);
+    const user =await userModel.findOne({_id:req.id});
+    console.log(user);
     // res.json(user._id)
     const keyword = {};
     if(req.query.name)
@@ -18,10 +20,10 @@ const getAllUser = asyncHandler(async (req, res) => {
     keyword.email=req.query.email;
     
     //   console.log(req.query);
-    console.log(keyword);
-    console.log(req.user);
+    // console.log(keyword);
+    // console.log(req.user);
     const users = await userModel.find(keyword).find({_id:{$ne:user._id}});
-    console.log(users);
+    // console.log(users);
     // const users = userModel.find(keyword)
     // console.log(keyword);
     res.status(200).send(users);
@@ -47,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const newUser = await userModel.create({ name: name, email: email, password: hash });
 
     if (newUser) {
-        const token = jwt.sign({ email: newUser.email, name: newUser.name }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ id: newUser._id, email: newUser.email }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.cookie('token', token, { httpOnly: true });
         res.status(201).json(newUser); // 201 indicates a resource was created
     } else {

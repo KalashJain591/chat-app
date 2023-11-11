@@ -25,3 +25,10 @@ module.exports = function(app) {
 async handler : Simple middleware for handling exceptions inside of async express routes and passing them to your express error handlers.
 
 Note : In postman spaces are also considered , so be careful while writing the api's
+
+model.find(id): This returns and array of objects , the point to be noted . to check if any document exsist with the _id as id , then the sizeof returned array>0.
+
+difference bw insertMany and create function of moongoose
+1. The biggest difference is that insertMany() ends up as one atomic insertMany() command that Mongoose sends to the MongoDB server, but create() ends up as a bunch of separate insertOne() calls. 
+2. insertMany is usually faster 
+3. Another difference is that create() triggers save() middleware, because create() calls save() internally. insertMany() does not trigger save() middleware,

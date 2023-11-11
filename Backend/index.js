@@ -34,9 +34,10 @@ app.post('/', (req, res) => {
 });
 
 app.use('/api/user',require('./Routes/userRoute'));
+app.use('/api/chat',require('./Routes/chatRoute'));
 // app.use('/api/message',require('./Routes/messageRoute'));
 
-app.use('/api/chat',require('./Routes/chatRoute'));
+
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{console.log('Mongodb connected'.bgBlue)})
